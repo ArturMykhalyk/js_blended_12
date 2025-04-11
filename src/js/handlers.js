@@ -125,6 +125,7 @@ async function handleProductClick(event) {
 // Обробка форми пошуку
 async function searchForm(event) {
   event.preventDefault();
+
   const keyword = refs.searchInput.value.trim();
 
   if (!keyword) {
@@ -137,6 +138,7 @@ async function searchForm(event) {
 
   STORAGE_KEYS.setSearch(true, keyword);
   await loadProducts({ search: true });
+
   refs.searchForm.reset();
 }
 
@@ -144,6 +146,7 @@ async function searchForm(event) {
 async function searchClear() {
   STORAGE_KEYS.setSearch(false);
   refs.searchInput.value = '';
+
   await loadProducts();
 }
 
@@ -173,6 +176,38 @@ function handleAddBtnWishlist(event) {
   updateWishlistCount();
 }
 
+function handleBuyBtnCart() {
+  iziToast.success({
+    message: `Thank you for your order.`,
+    position: 'topRight',
+  });
+
+  STORAGE_KEYS.setIdCart([]);
+  STORAGE_KEYS.saveState();
+
+  clearProducts();
+  updateCartCount();
+  refs.totalCart.textContent = '0';
+  refs.itemsCart.textContent = '0';
+  showNotFound();
+}
+
+function handleScrollUpBtn() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function handletoggleTheme() {
+  if (refs.toggleTheme.checked) {
+    STORAGE_KEYS.setTheme('dark');
+    refs.toggleTheme.checked = true;
+    STORAGE_KEYS.saveState();
+  } else {
+    STORAGE_KEYS.setTheme('light');
+    refs.toggleTheme.checked = false;
+    STORAGE_KEYS.saveState();
+  }
+
+  console.log(STORAGE_KEYS.getTheme());
+}
 export {
   handleCategoryClick,
   handleProductClick,
@@ -181,4 +216,7 @@ export {
   searchClear,
   handleAddBtnCart,
   handleAddBtnWishlist,
+  handleBuyBtnCart,
+  handleScrollUpBtn,
+  handletoggleTheme,
 };

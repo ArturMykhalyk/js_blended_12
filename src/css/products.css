@@ -176,3 +176,27 @@
   height: 32px;
   margin-bottom: 24px;
 }
+
+#scrollUpBtn {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  padding: 10px 15px;
+  font-size: 24px;
+  background-color: #ff6b0a;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  display: none;
+  z-index: 999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+
+  &:hover,
+  &:focus {
+    background-color: #e05a00;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 107, 10, 0.3);
+  }
+}

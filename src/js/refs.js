@@ -16,4 +16,9 @@ export const refs = {
   btnAddWishlistModal: document.querySelector('.modal-product__btn--wishlist'),
   navCountCart: document.querySelector('[data-cart-count]'),
   navCountWishlist: document.querySelector('[data-wishlist-count]'),
+  itemsCart: document.querySelector('[data-count]'),
+  totalCart: document.querySelector('[data-price]'),
+  buyProductsBtn: document.querySelector('.cart-summary__btn'),
+  scrollUpBtn: document.getElementById('scrollUpBtn'),
+  toggleTheme: document.querySelector('[type="checkbox"]'),
 };

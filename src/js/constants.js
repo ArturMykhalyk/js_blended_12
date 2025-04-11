@@ -11,7 +11,13 @@ export const STORAGE_KEYS = {
   _search: false,
   _searchWord: '',
   _totalPage: 1,
-
+  _theme: 'light',
+  getTheme() {
+    return this._theme;
+  },
+  setTheme(value) {
+    this._theme = value;
+  },
   setIdCart(value) {
     this._idCart = value;
   },
@@ -93,6 +99,7 @@ export const STORAGE_KEYS = {
     const state = {
       idCart: this._idCart,
       idWishlist: this._idWishlist,
+      theme: this._theme,
     };
     localStorage.setItem('cart', JSON.stringify(state));
   },
@@ -100,6 +107,7 @@ export const STORAGE_KEYS = {
   restoreState() {
     const state = JSON.parse(localStorage.getItem('cart'));
     if (state) {
+      this._theme = state.theme;
       this._idCart = Array.isArray(state.idCart) ? state.idCart : [];
       this._idWishlist = Array.isArray(state.idWishlist)
         ? state.idWishlist
