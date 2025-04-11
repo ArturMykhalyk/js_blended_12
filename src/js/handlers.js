@@ -1,14 +1,12 @@
-// Функції, які передаються колбеками в addEventListners
 import iziToast from 'izitoast';
-
-// Додатковий імпорт стилів
 import 'izitoast/dist/css/iziToast.min.css';
 
-import { STORAGE_KEYS } from './constants';
+import { refs } from './refs';
 import {
   getProducts,
   getProductsCategory,
   getProductsId,
+  getSearch,
 } from './products-api';
 import {
   createProducts,
@@ -20,92 +18,167 @@ import {
   showLoadMoreButton,
   hideLoadMoreButton,
   createProductModal,
+  updateCartCount,
+  updateWishlistCount,
 } from './render-function';
 import { openModal } from './modal';
-async function handleCategoryClick(event) {
-  //перевірка чи клік саме по кнопці
-  if (!event.target.classList.contains('categories__btn')) return;
-  // прибрати всі активні кнопки
-  const buttons = document.querySelectorAll('.categories__btn');
-  buttons.forEach(btn => btn.classList.remove('categories__btn--active'));
+import { STORAGE_KEYS } from './constants';
 
-  STORAGE_KEYS.category = event.target.textContent;
-  STORAGE_KEYS.page = 1;
-
-  hideNotFound();
-
-  hideLoadMoreButton();
-
+// Універсальна функція для завантаження продуктів
+async function loadProducts({ search = false, loadMore = false } = {}) {
   try {
     let products;
-    if (STORAGE_KEYS.category === 'All') {
-      products = await getProducts(STORAGE_KEYS.page);
+
+    if (search) {
+      products = await getSearch(
+        STORAGE_KEYS.getSearchWord(),
+        STORAGE_KEYS.getPage()
+      );
+    } else if (STORAGE_KEYS.getCategory() === 'All') {
+      products = await getProducts(STORAGE_KEYS.getPage());
     } else {
       products = await getProductsCategory(
-        STORAGE_KEYS.category,
-        STORAGE_KEYS.page
+        STORAGE_KEYS.getCategory(),
+        STORAGE_KEYS.getPage()
       );
     }
+    console.log(products);
+
+    if (!loadMore) clearProducts();
 
     if (products.products.length === 0) {
-      clearProducts();
       showNotFound();
       hideLoadMoreButton();
       return;
     }
 
-    STORAGE_KEYS.totalPage = products.total / STORAGE_KEYS.per_Page;
-    if (STORAGE_KEYS.totalPage > 1) {
+    hideNotFound();
+    createProducts(products.products);
+
+    STORAGE_KEYS.setTotalPage(products.total / STORAGE_KEYS.per_Page);
+
+    if (STORAGE_KEYS.getPage() <= STORAGE_KEYS.getTotalPage()) {
       showLoadMoreButton();
-      STORAGE_KEYS.page++;
-    }
-
-    clearProducts();
-
-    createProducts(products.products);
-    event.target.classList.toggle('categories__btn--active');
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function handleMoreBtnClick(event) {
-  showLoader();
-  try {
-    let products;
-    if (STORAGE_KEYS.category === 'All') {
-      products = await getProducts(STORAGE_KEYS.page);
     } else {
-      products = await getProductsCategory(
-        STORAGE_KEYS.category,
-        STORAGE_KEYS.page
-      );
-    }
-    hideLoader();
-    createProducts(products.products);
-
-    if (STORAGE_KEYS.totalPage <= STORAGE_KEYS.page) {
       hideLoadMoreButton();
-
-      iziToast.info({
-        message: "We're sorry, but you've reached the end of search results",
-        position: 'topRight',
-      });
+      if (loadMore) {
+        iziToast.info({
+          message: "We're sorry, but you've reached the end of search results",
+          position: 'topRight',
+        });
+      }
     }
-    STORAGE_KEYS.page++;
+    STORAGE_KEYS.incrementPage();
   } catch (error) {
-    console.error('Error click button :', error);
+    console.error('Loading products error:', error);
+  } finally {
+    hideLoader();
   }
 }
 
+// Обробка кліку по категорії
+async function handleCategoryClick(event) {
+  if (!event.target.classList.contains('categories__btn')) return;
+
+  document
+    .querySelectorAll('.categories__btn')
+    .forEach(btn => btn.classList.remove('categories__btn--active'));
+
+  event.target.classList.add('categories__btn--active');
+  STORAGE_KEYS.setCategory(event.target.textContent);
+
+  hideLoadMoreButton();
+  await loadProducts();
+}
+
+// Завантаження ще продуктів
+async function handleMoreBtnClick() {
+  showLoader();
+  await loadProducts({ search: STORAGE_KEYS.isSearch(), loadMore: true });
+}
+
+// Відкриття модального вікна з деталями
 async function handleProductClick(event) {
   const productItem = event.target.closest('.products__item');
   if (!productItem) return;
-  const id = productItem.dataset.id;
+
   openModal();
-  const product = await getProductsId(id);
-  console.log(product);
+
+  STORAGE_KEYS.setIdProduct(productItem.dataset.id);
+
+  //для побажань
+  if (STORAGE_KEYS.hasIdWishlist(STORAGE_KEYS.getIdProduct())) {
+    refs.btnAddWishlistModal.textContent = 'Remove from Wishlist';
+  } else {
+    refs.btnAddWishlistModal.textContent = 'Add to Wishlist';
+  }
+  //для корзини
+  if (STORAGE_KEYS.hasIdCart(STORAGE_KEYS.getIdProduct())) {
+    refs.btnAddCartModal.textContent = 'Remove from cart';
+  } else {
+    refs.btnAddCartModal.textContent = 'Add to Cart';
+  }
+  const product = await getProductsId(STORAGE_KEYS.getIdProduct());
   createProductModal(product);
 }
 
-export { handleCategoryClick, handleProductClick, handleMoreBtnClick };
+// Обробка форми пошуку
+async function searchForm(event) {
+  event.preventDefault();
+  const keyword = refs.searchInput.value.trim();
+
+  if (!keyword) {
+    refs.searchForm.reset();
+    return iziToast.error({
+      message: `The input string must not be empty.`,
+      position: 'topRight',
+    });
+  }
+
+  STORAGE_KEYS.setSearch(true, keyword);
+  await loadProducts({ search: true });
+  refs.searchForm.reset();
+}
+
+// Очистити пошук
+async function searchClear() {
+  STORAGE_KEYS.setSearch(false);
+  refs.searchInput.value = '';
+  await loadProducts();
+}
+
+function handleAddBtnCart(event) {
+  if (event.target.textContent.toLowerCase().trim() === 'add to cart') {
+    STORAGE_KEYS.addIdCart(STORAGE_KEYS.getIdProduct());
+    STORAGE_KEYS.saveState();
+    event.target.textContent = 'Remove from cart';
+  } else {
+    event.target.textContent = 'Add to Cart';
+    STORAGE_KEYS.removeIdCart(STORAGE_KEYS._idProduct);
+    STORAGE_KEYS.saveState();
+  }
+  updateCartCount();
+}
+
+function handleAddBtnWishlist(event) {
+  if (event.target.textContent.toLowerCase().trim() === 'add to wishlist') {
+    STORAGE_KEYS.addIdWishlist(STORAGE_KEYS.getIdProduct());
+    STORAGE_KEYS.saveState();
+    event.target.textContent = 'Remove from Wishlist';
+  } else {
+    event.target.textContent = 'Add to Wishlist';
+    STORAGE_KEYS.removeIdWishlist(STORAGE_KEYS._idProduct);
+    STORAGE_KEYS.saveState();
+  }
+  updateWishlistCount();
+}
+
+export {
+  handleCategoryClick,
+  handleProductClick,
+  handleMoreBtnClick,
+  searchForm,
+  searchClear,
+  handleAddBtnCart,
+  handleAddBtnWishlist,
+};

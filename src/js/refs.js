@@ -1,5 +1,7 @@
 //Обʼєкт з посиланнями на ДОМ елементи
 
+import { searchForm } from './handlers';
+
 export const refs = {
   categories: document.querySelector('.categories'),
   products: document.querySelector('.products'),
@@ -7,4 +9,11 @@ export const refs = {
   modal: document.querySelector('.modal'),
   modalProduct: document.querySelector('.modal-product'),
   closeModalBtn: document.querySelector('.modal__close-btn'),
+  searchForm: document.querySelector('.search-form'),
+  searchInput: document.querySelector('.search-form__input'),
+  searchClear: document.querySelector('.search-form__btn-clear'),
+  btnAddCartModal: document.querySelector('.modal-product__btn--cart'),
+  btnAddWishlistModal: document.querySelector('.modal-product__btn--wishlist'),
+  navCountCart: document.querySelector('[data-cart-count]'),
+  navCountWishlist: document.querySelector('[data-wishlist-count]'),
 };

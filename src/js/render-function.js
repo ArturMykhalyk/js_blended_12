@@ -8,6 +8,7 @@ import 'swiper/css/pagination';
 
 import Swiper from 'swiper';
 import { Navigation, Pagination, Autoplay, Zoom } from 'swiper/modules';
+import { STORAGE_KEYS } from './constants';
 
 function createCategories(categories) {
   categories.unshift('All');
@@ -32,7 +33,9 @@ function createProducts(products) {
         <img class="products__image"  src="${images[0]}" alt="${description}" />
         <p class="products__title">${title}</p>
         <p class="products__brand">
-          <span class="products__brand--bold">Brand:${brand}</span>
+          <span class="products__brand--bold">Brand:${
+            brand ? brand : ' no brand'
+          }</span>
         </p>
         <p class="products__category">Category: ${category}</p>
         <p class="products__price">Price: ${price}$</p>
@@ -55,7 +58,7 @@ function createProductModal({
   const tagsMarkup = tags
     .map(tag => `<li class="modal-product__tag">${tag}</li>`)
     .join('');
-
+  const loopEnable = images.length > 1;
   const imagesSlides = images
     .map(
       image => `
@@ -90,7 +93,7 @@ function createProductModal({
 
   new Swiper('.modal-product__slider', {
     modules: [Navigation, Pagination, Autoplay, Zoom],
-    loop: true,
+    loop: loopEnable,
     zoom: {
       maxRatio: 3,
     },
@@ -133,6 +136,15 @@ function showLoadMoreButton() {
 function hideLoadMoreButton() {
   document.querySelector('.moreButton').classList.remove('visible');
 }
+
+function updateCartCount() {
+  refs.navCountCart.textContent = STORAGE_KEYS._idCart.length;
+}
+
+function updateWishlistCount() {
+  refs.navCountWishlist.textContent = STORAGE_KEYS._idWishlist.length;
+}
+
 export {
   createCategories,
   createProducts,
@@ -144,4 +156,6 @@ export {
   showLoadMoreButton,
   hideLoadMoreButton,
   createProductModal,
+  updateCartCount,
+  updateWishlistCount,
 };
