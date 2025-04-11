@@ -5,8 +5,11 @@
     <link rel="icon" type="image/svg+xml" href="/js_blended_12/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cart</title>
-    <script type="module" crossorigin src="/js_blended_12/assets/styles-C8Ic-ukx.js"></script>
-    <link rel="stylesheet" crossorigin href="/js_blended_12/assets/styles-CkiXn988.css">
+    <script type="module" crossorigin src="/js_blended_12/cart.js"></script>
+    <link rel="modulepreload" crossorigin href="/js_blended_12/assets/vendor-D41pUE73.js">
+    <link rel="modulepreload" crossorigin href="/js_blended_12/assets/render-function-BBCoZDr3.js">
+    <link rel="stylesheet" crossorigin href="/js_blended_12/assets/render-function-C_a9sl_f.css">
+    <link rel="stylesheet" crossorigin href="/js_blended_12/assets/vendor-B9Q3JDqL.css">
   </head>
   <body>
     <header class="header">
@@ -17,6 +20,11 @@
       </svg>
     </a>
 
+    <label class="theme"
+      >Theme
+      <input class="visually-hidden" type="checkbox" />
+      <span class="theme-toggle"></span>
+    </label>
     <form class="search-form">
       <input
         class="search-form__input"
@@ -62,6 +70,7 @@
       <div class="container product-page">
         <main>
           <ul class="products"></ul>
+          <span class="loader"></span>
           <div class="not-found">
             <div class="not-found__icon">
               <svg
