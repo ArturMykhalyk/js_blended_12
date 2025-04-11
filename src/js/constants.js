@@ -7,7 +7,7 @@ export const STORAGE_KEYS = {
   _idCart: [],
   _idWishlist: [],
   _category: 'All',
-  _page: 0,
+  _page: 1,
   _search: false,
   _searchWord: '',
   _totalPage: 1,

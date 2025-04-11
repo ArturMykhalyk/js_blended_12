@@ -56,7 +56,7 @@ window.addEventListener('DOMContentLoaded', () => {
       STORAGE_KEYS._totalPage = products.total / STORAGE_KEYS.per_Page;
       if (STORAGE_KEYS._totalPage > 1) {
         showLoadMoreButton();
-        STORAGE_KEYS._page++;
+        STORAGE_KEYS.incrementPage();
       }
     })
     .catch(error => console.log('products', error));

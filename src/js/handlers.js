@@ -125,7 +125,7 @@ async function handleProductClick(event) {
 // Обробка форми пошуку
 async function searchForm(event) {
   event.preventDefault();
-
+  STORAGE_KEYS.setPage(1);
   const keyword = refs.searchInput.value.trim();
 
   if (!keyword) {
