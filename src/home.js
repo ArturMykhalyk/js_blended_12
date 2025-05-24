@@ -1,7 +1,9 @@
 import refs from './js/refs';
-import { getCategory } from './js/products-api';
-import { createCategories } from './js/render-function';
+import { getCategory, getProducts } from './js/products-api';
+import { createCategories, cratedProducts } from './js/render-function';
 
 const categories = await getCategory();
+const products = await getProducts();
 
 createCategories(categories);
+cratedProducts(products.products);
