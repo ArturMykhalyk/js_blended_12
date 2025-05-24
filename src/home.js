@@ -4,9 +4,17 @@ import { createCategories, cratedProducts } from './js/render-function';
 import { handlersCategoryClick } from './js/handlers.js';
 async function initMainPage() {
   const categories = await getCategory();
+
   const products = await getProducts();
 
-  createCategories(categories);
+  console.log(categories);
+
+  if (!categories) {
+    refs.categories.innerHTML = 'not found';
+  } else {
+    createCategories(categories);
+  }
+
   cratedProducts(products.products);
 }
 
