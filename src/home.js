@@ -2,8 +2,12 @@ import refs from './js/refs';
 import { getCategory, getProducts } from './js/products-api';
 import { createCategories, cratedProducts } from './js/render-function';
 
-const categories = await getCategory();
-const products = await getProducts();
+async function initMainPage() {
+  const categories = await getCategory();
+  const products = await getProducts();
 
-createCategories(categories);
-cratedProducts(products.products);
+  createCategories(categories);
+  cratedProducts(products.products);
+}
+
+initMainPage();
