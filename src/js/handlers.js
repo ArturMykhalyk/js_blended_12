@@ -10,7 +10,14 @@ export async function handlersCategoryClick(e) {
 
     const productsByCategory = await getProductsByCategory(userCategory);
     refs.products.innerHTML = '';
-    cratedProducts(productsByCategory.products);   
+    cratedProducts(productsByCategory.products); 
+    
+    refs.categories.querySelectorAll('.categories__btn').forEach(element => {
+        element.classList.remove('categories__btn--active');
+    });
+    
+    e.target.classList.add('categories__btn--active');    
+
 }
 
 
