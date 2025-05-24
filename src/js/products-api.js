@@ -1,5 +1,6 @@
 // Функції для роботи з бекендом
 import axios from 'axios';
+
 import { STORAGE_KEYS } from './constants';
 STORAGE_KEYS.restoreState();
 async function getCategories() {
