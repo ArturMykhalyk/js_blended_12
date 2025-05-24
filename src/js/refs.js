@@ -1,8 +1,5 @@
 //Обʼєкт з посиланнями на ДОМ елементи
-
-import { searchForm } from './handlers';
-
-export const refs = {
+export default {
   categories: document.querySelector('.categories'),
   products: document.querySelector('.products'),
   loadMoreButton: document.querySelector('.moreButton'),

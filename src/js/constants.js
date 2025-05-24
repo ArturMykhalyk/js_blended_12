@@ -1,3 +1,5 @@
 //Константи
 
-export const STORAGE_KEYS = {};
+export const STORAGE_KEYS = {
+  API: ' https://dummyjson.com/',
+};
