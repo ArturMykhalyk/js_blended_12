@@ -1,7 +1,7 @@
 import refs from './js/refs';
 import { getCategory, getProducts } from './js/products-api';
 import { createCategories, cratedProducts } from './js/render-function';
-import { handlersCategoryClick, handlersProductClick, handlersCloseModal } from './js/handlers.js';
+import { handlersCategoryClick, handlersProductClick, searchForm } from './js/handlers.js';
 async function initMainPage() {
   const categories = await getCategory();
 
@@ -20,3 +20,4 @@ initMainPage();
 
 refs.categories.addEventListener('click', handlersCategoryClick);
 refs.products.addEventListener("click", handlersProductClick);
+refs.searchForm.addEventListener('submit', searchForm);
