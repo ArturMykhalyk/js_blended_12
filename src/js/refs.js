@@ -2,6 +2,7 @@
 export default {
   categories: document.querySelector('.categories'),
   products: document.querySelector('.products'),
+  notFound: document.querySelector('.not-found'),
   loadMoreButton: document.querySelector('.moreButton'),
   modal: document.querySelector('.modal'),
   modalProduct: document.querySelector('.modal-product'),

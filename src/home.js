@@ -7,8 +7,6 @@ async function initMainPage() {
 
   const products = await getProducts();
 
-  console.log(categories);
-
   if (!categories) {
     refs.categories.innerHTML = 'not found';
   } else {

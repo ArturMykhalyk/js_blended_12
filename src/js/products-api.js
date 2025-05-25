@@ -7,7 +7,6 @@ export async function getCategory() {
   try {
     const endPoint = '/category-list';
     const res = await axios.get(endPoint);
-    console.log(res.data);
     return res.data;
   } catch (e) {
     console.log(e);
@@ -29,7 +28,13 @@ export async function getProductsByCategory(categoryName, currentPage = 1) {
     limit: 12,
     skip: (currentPage - 1) * 12,
   };
-  const endPoint = `/category/${categoryName}`;
+
+  let endPoint = `/category/${categoryName}`;
+
+  if (categoryName === 'ALL') {
+    endPoint = '';
+  }
+
   const res = await axios.get(endPoint, { params });
 
   return res.data;
