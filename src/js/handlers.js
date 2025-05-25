@@ -1,6 +1,7 @@
 import refs from './refs';
-import { getProductsByCategory } from './products-api.js';
-import { cratedProducts } from './render-function.js';
+import { getProductsByCategory, getProductId } from './products-api.js';
+import { cratedProducts, createProductModal } from './render-function.js';
+import { openModal } from './modal';
 
 export async function handlersCategoryClick(e) {
   if (!e.target.classList.contains('categories__btn')) return;
@@ -23,4 +24,24 @@ export async function handlersCategoryClick(e) {
     element.classList.remove('categories__btn--active');
   });
   e.target.classList.add('categories__btn--active');
+}
+
+export async function handlersProductClick(e) {
+
+  const productItem = e.target.closest('.products__item');
+  if (!productItem) return;
+
+  const productId = productItem.dataset.id
+  openModal();
+
+  const product = await getProductId(productId);
+  console.log(product);
+  createProductModal(product)
+}
+
+
+
+export function handlersCloseModal(e) {
+  closeModal()
+
 }

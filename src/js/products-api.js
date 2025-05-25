@@ -40,4 +40,8 @@ export async function getProductsByCategory(categoryName, currentPage = 1) {
   return res.data;
 }
 
-// ttps://dummyjson.com/products/category/smartphones
+export async function getProductId(id) {
+  const res = await axios.get(`/${id}`);
+  return res.data;
+}
+
