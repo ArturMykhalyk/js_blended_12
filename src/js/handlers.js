@@ -1,5 +1,5 @@
 import refs from './refs';
-import { getProductsByCategory, getProductId } from './products-api.js';
+import { getProductsByCategory, getProductId, searchUserProducts } from './products-api.js';
 import { cratedProducts, createProductModal } from './render-function.js';
 import { openModal } from './modal';
 
@@ -39,9 +39,22 @@ export async function handlersProductClick(e) {
   createProductModal(product)
 }
 
+export async function searchForm(e) {
+    e.preventDefault();
+    const searchName = refs.searchInput.value.trim();
 
+    if (searchName === '') return;
 
-export function handlersCloseModal(e) {
-  closeModal()
+    const searchProduct = await searchUserProducts(searchName);
+    refs.products.innerHTML = '';
 
+    if (searchProduct.total === 0) {
+        refs.notFound.classList.add('not-found--visible');
+    } else {
+        refs.notFound.classList.remove('not-found--visible');
+       
+        cratedProducts(searchProduct.products);
+    }
+
+    refs.searchForm.reset();
 }

@@ -45,3 +45,16 @@ export async function getProductId(id) {
   return res.data;
 }
 
+export async function searchUserProducts(searchUser, currentPage = 1) {
+  const params = {
+    limit: 12,
+    skip: (currentPage - 1) * 12,
+    q: searchUser,
+  };
+  let endPoint = `/search`;
+  const res = await axios.get(endPoint, { params });
+
+  return res.data;
+}
+
+//https://dummyjson.com/products/search?q=nail
